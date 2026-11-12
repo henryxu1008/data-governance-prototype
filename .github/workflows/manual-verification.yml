@@ -1,0 +1,27 @@
+name: Prototype Manual Verification
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Branch to validate'
+        required: true
+        default: 'feat/extract-governance-demo'
+        type: string
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: GITHUB_PAGES=true npm run build
+      - run: node scripts/browser-smoke.mjs
