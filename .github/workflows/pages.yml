@@ -1,5 +1,7 @@
 name: Deploy Prototype to GitHub Pages
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       target_ref:
@@ -26,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_ref }}
+          ref: ${{ github.event_name == 'push' && 'main' || inputs.target_ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -39,7 +41,7 @@ jobs:
         with:
           path: dist/
   deploy:
-    if: inputs.publish == true && inputs.target_ref == 'main' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (inputs.publish == true && inputs.target_ref == 'main'))
     needs: validate
     environment:
       name: github-pages
