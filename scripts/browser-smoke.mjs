@@ -13,7 +13,9 @@ try{
  page.on('pageerror',e=>errors.push(e.message));
  const requests=[];page.on('request',req=>{const url=new URL(req.url());if(url.origin!==new URL(base).origin||url.pathname.includes('/api/'))requests.push(req.url())});
  await page.goto(base,{waitUntil:'networkidle'});
- await page.getByRole('button',{name:'系统设置'}).first().click();
+ const settings=page.getByRole('button',{name:'系统设置'}).first();
+ if(await settings.count()===0){throw new Error('Settings button missing; browser errors='+JSON.stringify(errors)+'; body='+JSON.stringify((await page.locator('body').innerText()).slice(0,1200))+'; url='+page.url())}
+ await settings.click({timeout:5000});
  assert.match(await page.locator('main').innerText(),/系统设置|平台管理|成员|组织/);
  for(const hash of ['home','develop','manage','assets','quality-list','settings','agent-workbench','agent-task']){
   await page.goto(base+'#'+hash,{waitUntil:'networkidle'});
