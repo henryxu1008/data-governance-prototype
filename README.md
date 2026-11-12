@@ -1,22 +1,24 @@
 # 创平数据治理平台 · 独立交互原型
 
-本仓库用于从 [data-product-platform PR #363](https://github.com/henryxu1008/data-product-platform/pull/363) 提取前端交互原型，目标是与 [data-forge](https://github.com/henryxu1008/data-forge) 一样独立运行、独立评审和部署。
+从 [data-product-platform PR #363](https://github.com/henryxu1008/data-product-platform/pull/363) 提取的独立前端交互原型，保留业务流程、治理、系统设置和 Agent 本地模拟交互。
 
-## 来源与边界
+## 运行
 
-- 来源分支：`henryxu1008/data-product-platform:codex/agent-quality-readonly`
-- 来源目录：`apps/web/components/governance-demo/`
-- 产品名称：创平数据治理平台
-- 仅保留本地演示数据、页面、导航、系统设置、Agent 工作台与业务交互
-- 不接入 Core API、真实 IAM、真实 Agent 派发或业务写入
-- 原仓库 PR #363 保持 Draft，不因本仓库创建而合并
+Node.js 20.19+ 或 22.12+：
 
-## 迁移验收条件
+```bash
+npm install
+npm run dev
+npm run test
+npm run build
+```
 
-1. React + Vite 独立构建和运行，无 Next.js 运行时依赖
-2. 保留业务页面、设置、Agent 工作台及浏览器刷新后的演示会话
-3. 保留业务导航和历史回退；不调用真实后端
-4. 通过独立构建、状态测试和 Playwright 关键流程回归
-5. GitHub Pages 部署仅在构建及测试通过后启用
+本仓库是**模拟数据原型**，不连接真实 Core API、IAM 或 Agent 执行服务；本地演示结果不代表正式业务事实。
 
-> 当前为仓库初始化及迁移约束，原型源码尚未导入；请勿将此 README 视为已完成迁移或可运行的应用。
+## 来源
+
+来源分支：`data-product-platform/codex/agent-quality-readonly`，原始目录 `apps/web/components/governance-demo`。提取保留原始 JSX/模型，替换 Next.js 导航为浏览器本地 hash 导航。原 PR #363 保持 Draft。
+
+## 当前验证边界
+
+代码已迁入独立仓库。尚需在具备 Node 依赖安装能力的环境中运行真实构建、浏览器回归，并完成 Pages 发布验收。请勿将静态合同测试视为完整业务验收。

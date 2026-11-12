@@ -1,0 +1,1 @@
+import React from 'react';import{createRoot}from'react-dom/client';import{App}from './demo/App.jsx';import './demo/styles.css';import './demo/integration.css';import './demo/agent.css';createRoot(document.getElementById('root')).render(<React.StrictMode><App settingsInteractionDemo={true}/></React.StrictMode>);
