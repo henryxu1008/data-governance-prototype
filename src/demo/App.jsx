@@ -37,7 +37,7 @@ function AppContent({workspace,liveAgent,liveCatalog=false,syntheticPreview=fals
  useEffect(()=>{document.title=title+' · 创平数据治理平台'},[title,connected]);
  useEffect(()=>{if(!liveAgent&&!settingsInteractionDemo&&['agent-workbench','agent-task'].includes(page))router.replace('/agent')},[page,liveAgent,router,settingsInteractionDemo]);
  let content;
- const oldObjectLink=!liveAgent&&!aliases[pathname]&&pathname!=='/demo';
+ const oldObjectLink=false;
  if(['agent-workbench','agent-task'].includes(page))content=settingsInteractionDemo?<AgentWorkspace page={page} navigate={navigate}/>:<button className="button" onClick={()=>navigate('agent-workbench')}>打开 Agent 工作台</button>;
  else if(['entity-review','source-admissions','batches'].includes(page))content=<SupplementalWorkspace page={page} navigate={navigate}/>;
  else if(['admin-workspaces','workspace-members'].includes(page))content=<WorkspaceManagement id={page} components={components} navigate={navigate}/>;
