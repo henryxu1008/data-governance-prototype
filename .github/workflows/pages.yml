@@ -1,7 +1,17 @@
 name: Deploy Prototype to GitHub Pages
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Branch to verify (publish requires main)'
+        type: string
+        required: true
+        default: 'feat/extract-governance-demo'
+      publish:
+        description: 'Publish validated main only'
+        type: boolean
+        required: true
+        default: false
 permissions:
   contents: read
   pages: write
@@ -15,6 +25,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -27,7 +39,7 @@ jobs:
         with:
           path: dist/
   deploy:
-    if: github.ref == 'refs/heads/main'
+    if: inputs.publish == true && inputs.target_ref == 'main' && github.ref == 'refs/heads/main'
     needs: validate
     environment:
       name: github-pages
