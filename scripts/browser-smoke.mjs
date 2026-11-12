@@ -3,7 +3,7 @@ import {spawn} from 'node:child_process';
 import assert from 'node:assert/strict';
 const port=4179;
 const base='http://127.0.0.1:'+port+'/data-governance-prototype/';
-const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port',String(port),'--strictPort'],{stdio:'pipe'});
+const server=spawn(process.execPath,['node_modules/vite/bin/vite.js','preview','--host','127.0.0.1','--port',String(port),'--strictPort'],{stdio:'pipe',env:{...process.env,GITHUB_PAGES:'true'}});
 const errors=[];const diagnostics=[];
 const wait=async()=>{for(let i=0;i<60;i++){try{const r=await fetch(base);if(r.ok)return}catch{}await new Promise(r=>setTimeout(r,500))}throw Error('preview did not start')};
 let browser;
