@@ -13,3 +13,8 @@ test('quality failure scenario uses the same stable option value and handler bra
  assert.match(s,/if\(scenario==='failure'\)/);
  assert.match(s,/useState\('normal'\)/);
 });
+
+test('batch report navigation updates the report filter to the selected demand',()=>{
+ const s=read('src/demo/SupplementalWorkspace.jsx');
+ assert.match(s,/selectedReportId:r\.id,selectedDemandId:r\.demandId,reportDemandFilter:r\.demandId/);
+});
