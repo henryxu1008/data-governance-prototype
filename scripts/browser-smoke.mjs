@@ -26,6 +26,27 @@ try{
   assert.ok((await page.locator('main').innerText()).trim().length>40,'empty page '+hash);
   assert.equal(new URL(page.url()).pathname,'/data-governance-prototype/');
  }
+ // Real interaction: create an Agent plan, retain the task through reload.
+ await page.goto(base+'#agent-workbench',{waitUntil:'networkidle'});
+ await page.getByRole('textbox',{name:'业务目标'}).fill('验证独立原型的业务分析方案与持久化');
+ await page.getByRole('textbox',{name:'成果用途'}).fill('团队演示验收');
+ await page.getByRole('button',{name:'生成演示计划'}).click();
+ await page.waitForURL(/#agent-task/);
+ assert.match(await page.locator('main').innerText(),/验证独立原型的业务分析方案与持久化/);
+ await page.reload({waitUntil:'networkidle'});
+ assert.match(await page.locator('main').innerText(),/验证独立原型的业务分析方案与持久化/,'Agent task lost after reload');
+ // Real interaction: edit local settings and verify persistence and audit.
+ await page.goto(base+'#admin-config',{waitUntil:'networkidle'});
+ await page.getByRole('combobox',{name:'时区'}).selectOption('Asia/Shanghai');
+ await page.getByRole('button',{name:'保存本地配置'}).click();
+ await page.reload({waitUntil:'networkidle'});
+ assert.equal(await page.getByRole('combobox',{name:'时区'}).inputValue(),'Asia/Shanghai','local settings lost after reload');
+ // Real interaction: switch to the secondary workspace and ensure route remains inside Pages.
+ await page.getByRole('button',{name:/切换工作空间/}).click();
+ await page.getByRole('button',{name:/园区能耗分析/}).click();
+ assert.equal(new URL(page.url()).pathname,'/data-governance-prototype/');
+ await page.reload({waitUntil:'networkidle'});
+ assert.match(await page.locator('body').innerText(),/园区能耗分析/,'workspace selection lost after reload');
  await page.reload({waitUntil:'networkidle'});
  assert.ok((await page.locator('main').innerText()).length>40);
  assert.deepEqual(errors,[],'browser exceptions');
